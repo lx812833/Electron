@@ -6,6 +6,11 @@ const path = require("path");
  * BrowserWindow模块：创建和管理应用程序窗口。
 */
 
+/**
+ * preload预加载：某一个渲染进程，在页面加载之前加载一个本地脚本，这个脚本能调用所有Node API、能调用window工具
+ * 要将此脚本附加到渲染器流程，在现有的 BrowserWindow 构造器中将路径中的预加载脚本传入 webPreferences.preload 选项
+*/
+
 // 创建窗口（主进程---Electron运行环境）
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
