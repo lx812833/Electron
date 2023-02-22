@@ -7,7 +7,9 @@
     "serve": "nodemon --exec electron ."
   },
   "dependencies": {
-    "electron": "^23.1.0",
     "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "electron": "^23.1.0"
   }
 }
