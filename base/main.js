@@ -18,6 +18,7 @@ const createWindow = () => {
     y: 100,
     width: 300,
     height: 300,
+    frame: false, // 隐藏导航栏
     alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, './frontEnd/preload.js')
@@ -35,22 +36,22 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
+})
 
-  // 当所有的窗口都被关闭时触发
-  // 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常
-  // 对应用程序和它们的菜单栏来说应该时刻保持激活状态, 
-  // 直到用户使用 Cmd + Q 明确退出
-  app.on("window-all-closed", () => {
-    if (process.platform != "darwin") {
-      app.quit();
-    }
-  })
+// 当所有的窗口都被关闭时触发
+// 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常
+// 对应用程序和它们的菜单栏来说应该时刻保持激活状态, 
+// 直到用户使用 Cmd + Q 明确退出
+app.on("window-all-closed", () => {
+  if (process.platform != "darwin") {
+    app.quit();
+  }
+})
 
-  // macOS 激活时事件
-  app.on("activate", () => {
-    // 在 macOS 系统内, 如果没有已开启的应用窗口，点击托盘图标时通常会重新创建一个新窗口
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
+// macOS 激活时事件
+app.on("activate", () => {
+  // 在 macOS 系统内, 如果没有已开启的应用窗口，点击托盘图标时通常会重新创建一个新窗口
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
 })

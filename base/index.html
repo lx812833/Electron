@@ -6,15 +6,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html {
+      width: 100vw;
+      height: 100vh;
+      -webkit-app-region: drag;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: red;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 
 <body>
-  <div>hello electron</div>
-  <p>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-  </p>
   <script src="./frontEnd/render.js"></script>
 </body>
 
