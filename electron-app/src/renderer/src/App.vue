@@ -17,6 +17,14 @@ const handleSendApi = () => {
   // @ts-ignore
   window.api.setTitle(`当前时间戳：${Date.now()}`);
 }
+
+// 向预加载脚本传递回调方法，用于处理主进程的消息
+// @ts-ignore
+window.api.incrementNumber((event: { sender: { send: (arg0: string, arg1: string) => void; }; }, value: string) => {
+  text.value = value;
+  // 向主进程发送消息
+  event.sender.send("finish", "h1.innerHTML");
+})
 </script>
 
 <style lang="less">

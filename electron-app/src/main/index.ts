@@ -1,4 +1,4 @@
-import { app, shell, ipcMain, BrowserWindow } from 'electron';
+import { app, shell, ipcMain, Menu, BrowserWindow } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
@@ -9,7 +9,7 @@ function createWindow(): void {
     width: 900,
     height: 670,
     show: false,
-    autoHideMenuBar: true,
+    // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -33,6 +33,21 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
+
+  // 创建菜单
+  const menu = Menu.buildFromTemplate([
+    {
+      label: '菜单',
+      submenu: [
+        {
+          click: () => mainWindow.webContents.send('increment', 1),
+          label: '增加',
+        },
+      ],
+    },
+  ])
+
+  Menu.setApplicationMenu(menu);
 }
 
 // This method will be called when Electron has finished
@@ -51,6 +66,12 @@ app.whenReady().then(() => {
 
   createWindow();
 
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  })
+
   // 主进程事件监听
   ipcMain.on('setTitle', (event, title) => {
     // 获取用于控制网页的webContents对象
@@ -61,10 +82,8 @@ app.whenReady().then(() => {
     window.setTitle(title);
   })
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  ipcMain.on('finish', (_event, value) => {
+    console.log('最后结果是：' + value);
   })
 })
 

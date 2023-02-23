@@ -5,6 +5,8 @@ import { electronAPI } from '@electron-toolkit/preload';
 // 该API用于向主进程传递事件
 const api = {
   setTitle: (title: string) => ipcRenderer.send("setTitle", title),
+  // 为渲染进程设置接口，用于接收主进程的消息
+  incrementNumber: (callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => ipcRenderer.on('increment', callback),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
