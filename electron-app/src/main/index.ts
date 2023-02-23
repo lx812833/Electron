@@ -85,6 +85,16 @@ app.whenReady().then(() => {
   ipcMain.on('finish', (_event, value) => {
     console.log('最后结果是：' + value);
   })
+
+  // 为一个 invokeable的IPC 添加一个handler。 
+  // 每当一个渲染进程调用 ipcRenderer.invoke(channel, ...args) 时这个处理器就会被调用
+  // 如果 listener 返回一个 Promise，那么 Promise 的最终结果就是远程调用的返回值。 否则， 监听器的返回值将被用来作为应答值。
+
+  ipcMain.handle('mainShow', async (_event, ...args) => {
+    // const result = await somePromise(..._args);
+    // return result;
+    return args[0];
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

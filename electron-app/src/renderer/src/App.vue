@@ -13,9 +13,14 @@ import Versions from "./components/Versions.vue";
 
 const text = ref("Electron + Vue3 + Vite");
 
-const handleSendApi = () => {
+const handleSendApi = async () => {
   // @ts-ignore
   window.api.setTitle(`当前时间戳：${Date.now()}`);
+
+  // 双向通信
+  // @ts-ignore
+  const res = await window.api.show(Date.now());
+  text.value = res;
 }
 
 // 向预加载脚本传递回调方法，用于处理主进程的消息
