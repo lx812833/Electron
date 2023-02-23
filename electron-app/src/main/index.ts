@@ -12,8 +12,26 @@ function createWindow(): void {
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
+      sandbox: false,
+      /**
+       * contextIsolation：
+       *  上下文隔离（关闭上下文隔离后，Web 渲染器进程中可以使用electron与node api等部分高级api）
+       *  否则，从预加载脚本公开 API 的唯 方法是通过 contextBridge API
+       *  禁用上下文隔离后 contextIsolation: false，
+       *  在preload.js中则不需要使用 contextBridge.exposeInMainWorld 向renderer.js 中提高接口了
+      */
+      contextIsolation: true,
+      /**
+       * nodeIntegration：
+       *   当有此属性时, webview 中的访客页（guest page）将具有Node集成, 
+       *   并且可以使用像 require 和 process 这样的node APIs 去访问低层系统资源。 
+       *   Node 集成在访客页中默认是禁用的。 
+       * 
+       *  通过修改 main.js 中的 nodeIntegration 配置，
+       *  来开启node支持，这时就可以在preload.js或renderer.js中使用fs 等高级模块
+      */
+      nodeIntegration: false,
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
     }
   })
 
