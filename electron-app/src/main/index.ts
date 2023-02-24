@@ -1,12 +1,12 @@
-import { app, shell, ipcMain, Menu, BrowserWindow, screen } from 'electron';
+import { app, shell, ipcMain, Menu, BrowserWindow, screen, dialog } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
-function createWindow(): void {
-  // 是否是苹果系统
-  const isMac = process.platform === 'darwin';
+// 是否是苹果系统
+const isMac = process.platform === 'darwin';
 
+const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     x: screen.getPrimaryDisplay().workAreaSize.width - 900,
@@ -61,10 +61,19 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
 
-  // 创建菜单
+  applicationMenu(mainWindow);
+
+
+  mainWindow.webContents.openDevTools();
+  // 将窗口移动到屏幕中心
+  // mainWindow.center();
+}
+
+// 创建菜单
+const applicationMenu = (mainWindow: BrowserWindow) => {
   const menu = Menu.buildFromTemplate([
     {
-      label: 'Honduran',
+      label: 'bilibili',
       submenu: [
         {
           label: '打开新窗口',
@@ -102,10 +111,26 @@ function createWindow(): void {
   ])
 
   Menu.setApplicationMenu(menu);
+}
 
-  mainWindow.webContents.openDevTools();
-  // 将窗口移动到屏幕中心
-  // mainWindow.center();
+// 自定义右键消息框菜单
+const messageBox = async () => {
+  const result = await dialog.showMessageBox({
+    type: 'warning',
+    message: '你要退出吗？',
+    detail: '有问题可以访问后盾人网站',
+    buttons: ['取消', '退出'],
+    // 取消按钮的索引，使用esc根据索引调用取消按钮，默认为0，所以建议在buttons中将取消设置为第一个
+    cancelId: 0,
+    checkboxLabel: '接收协议',
+    checkboxChecked: false,
+  })
+  if (!result.checkboxChecked) {
+    return dialog.showErrorBox('通知', '你没有接收协议');
+  }
+  if (result.response === 1) {
+    app.quit();
+  }
 }
 
 // This method will be called when Electron has finished
@@ -141,22 +166,20 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('finish', (_event, value) => {
-    console.log('最后结果是：' + value);
+    dialog.showErrorBox("通知", value);
   })
 
   // 自定义右键菜单
   ipcMain.on('showContextMenu', (event) => {
     const popupMenuTemplate = [
       { label: '退出', click: () => app.quit() },
+      { type: 'separator' },
+      { label: '消息框', click: () => messageBox() }
     ]
-
-    const popupMenu = Menu.buildFromTemplate(
-      popupMenuTemplate,
-    )
-    popupMenu.popup(
-      // @ts-ignore (define in dts)
-      BrowserWindow.fromWebContents(event.sender),
-    )
+    // @ts-ignore (define in dts)
+    const popupMenu = Menu.buildFromTemplate(popupMenuTemplate);
+    // @ts-ignore (define in dts)
+    popupMenu.popup(BrowserWindow.fromWebContents(event.sender));
   })
 
   // 为一个 invokeable的IPC 添加一个handler。 
