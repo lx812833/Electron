@@ -4,6 +4,7 @@
     <use xlink:href="./assets/icons.svg#electron" />
   </svg>
   <h2 class="hero-text">{{ text }}</h2>
+  <a href="https://www.houdunren.com" target="__blank">后盾人</a>
   <button @click="handleSendApi">切换</button>
 </template>
 

@@ -1,4 +1,4 @@
-import { app, shell, ipcMain, Menu, BrowserWindow } from 'electron';
+import { app, shell, ipcMain, Menu, BrowserWindow, screen } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
@@ -6,6 +6,8 @@ import icon from '../../resources/icon.png?asset';
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    x: screen.getPrimaryDisplay().workAreaSize.width - 900,
+    y: 0,
     width: 900,
     height: 670,
     show: false,
@@ -35,12 +37,16 @@ function createWindow(): void {
     }
   })
 
+  // 如果应用过于复杂，在加载本地资源时出现白屏，这时可以监测窗口的 ready-to-show 事件
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();
   })
 
+  // 使用 shell 模块，用操作系统的默认浏览器打开网页链接
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
+    // action: deny 拒绝electron新建窗口打开
+    // action: allow 允许electron新建窗口打开
     return { action: 'deny' };
   })
 
@@ -68,6 +74,8 @@ function createWindow(): void {
   Menu.setApplicationMenu(menu);
 
   mainWindow.webContents.openDevTools();
+  // 将窗口移动到屏幕中心
+  // mainWindow.center();
 }
 
 // This method will be called when Electron has finished
