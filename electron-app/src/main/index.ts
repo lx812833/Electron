@@ -12,7 +12,7 @@ function createWindow(): void {
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      sandbox: false,
+      sandbox: false, // 关闭沙盒模式，为false 时 preload.js 可以使用nodejs、electron的高级api，如fs模块
       /**
        * contextIsolation：
        *  上下文隔离（关闭上下文隔离后，Web 渲染器进程中可以使用electron与node api等部分高级api）
@@ -66,6 +66,8 @@ function createWindow(): void {
   ])
 
   Menu.setApplicationMenu(menu);
+
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
