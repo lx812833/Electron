@@ -11,6 +11,8 @@ const api = {
   show: (val: any) => {
     return ipcRenderer.invoke('mainShow', val)
   },
+  // 自定义右键菜单
+  showContextMenu: () => ipcRenderer.send('showContextMenu')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

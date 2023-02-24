@@ -11,8 +11,8 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     x: screen.getPrimaryDisplay().workAreaSize.width - 900,
     y: 0,
-    width: 900,
-    height: 670,
+    width: 700,
+    height: 450,
     show: false,
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -142,6 +142,21 @@ app.whenReady().then(() => {
 
   ipcMain.on('finish', (_event, value) => {
     console.log('最后结果是：' + value);
+  })
+
+  // 自定义右键菜单
+  ipcMain.on('showContextMenu', (event) => {
+    const popupMenuTemplate = [
+      { label: '退出', click: () => app.quit() },
+    ]
+
+    const popupMenu = Menu.buildFromTemplate(
+      popupMenuTemplate,
+    )
+    popupMenu.popup(
+      // @ts-ignore (define in dts)
+      BrowserWindow.fromWebContents(event.sender),
+    )
   })
 
   // 为一个 invokeable的IPC 添加一个handler。 

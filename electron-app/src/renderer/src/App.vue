@@ -1,11 +1,13 @@
 <template>
-  <Versions />
-  <svg class="hero-logo" viewBox="0 0 900 300">
-    <use xlink:href="./assets/icons.svg#electron" />
-  </svg>
-  <h2 class="hero-text">{{ text }}</h2>
-  <a href="https://www.houdunren.com" target="__blank">后盾人</a>
-  <button @click="handleSendApi">切换</button>
+  <div class="wrapper" @contextmenu.prevent="handleRightClick">
+    <Versions />
+    <svg class="hero-logo" viewBox="0 0 900 300">
+      <use xlink:href="./assets/icons.svg#electron" />
+    </svg>
+    <h2 class="hero-text">{{ text }}</h2>
+    <a href="https://www.bilibili.com/" target="__blank">哔哩哔哩</a>
+    <button @click="handleSendApi">切换</button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -13,6 +15,11 @@ import { ref } from "vue";
 import Versions from "./components/Versions.vue";
 
 const text = ref("Electron + Vue3 + Vite");
+
+const handleRightClick = () => {
+  // @ts-ignore
+  window.api.showContextMenu();
+}
 
 const handleSendApi = async () => {
   // @ts-ignore
@@ -35,4 +42,9 @@ window.api.incrementNumber((event: { sender: { send: (arg0: string, arg1: string
 
 <style lang="less">
 @import "./assets/css/styles.less";
+.wrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 </style>
