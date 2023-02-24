@@ -12,7 +12,9 @@ const api = {
     return ipcRenderer.invoke('mainShow', val)
   },
   // 自定义右键菜单
-  showContextMenu: () => ipcRenderer.send('showContextMenu')
+  showContextMenu: () => ipcRenderer.send('showContextMenu'),
+  // 选择文件
+  selectFile: () => { return ipcRenderer.invoke('selectFile') },
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

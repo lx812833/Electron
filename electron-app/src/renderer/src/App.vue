@@ -7,6 +7,7 @@
     <h2 class="hero-text">{{ text }}</h2>
     <a href="https://www.bilibili.com/" target="__blank">哔哩哔哩</a>
     <button @click="handleSendApi">切换</button>
+    <button @click="handleSelectFile">选择文件</button>
   </div>
 </template>
 
@@ -29,6 +30,12 @@ const handleSendApi = async () => {
   // @ts-ignore
   const res = await window.api.show(Date.now());
   text.value = res;
+}
+
+const handleSelectFile = async () => {
+  // @ts-ignore
+  const result = await window.api.selectFile();
+  console.log("文件选择", result);
 }
 
 // 向预加载脚本传递回调方法，用于处理主进程的消息

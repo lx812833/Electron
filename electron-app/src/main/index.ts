@@ -191,6 +191,23 @@ app.whenReady().then(() => {
     // return result;
     return args[0];
   })
+
+  // 选择文件
+  ipcMain.handle('selectFile', () => {
+    return dialog.showOpenDialog({
+      message: '选择文件',
+      // 默认路径，默认选择的文件
+      defaultPath: '微信图片_20221103132225.jpg',
+      // properties: ['openFile', 'openDirectory', 'multiSelections',],
+      // 文件类型限制
+      filters: [
+        {
+          name: 'images',
+          extensions: ['jpg', 'png', 'gif'],
+        },
+      ]
+    })
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
