@@ -1,7 +1,8 @@
-import { app, shell, ipcMain, Menu, BrowserWindow, screen, dialog } from 'electron';
+import { app, shell, ipcMain, Notification, Menu, BrowserWindow, screen, dialog } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
+import { writeFileSync } from 'fs';
 
 // 是否是苹果系统
 const isMac = process.platform === 'darwin';
@@ -189,6 +190,11 @@ app.whenReady().then(() => {
   ipcMain.handle('mainShow', async (_event, ...args) => {
     // const result = await somePromise(..._args);
     // return result;
+    new Notification({
+      title: 'Notification通知',
+      body: '得每天早8点签到',
+    }).show();
+
     return args[0];
   })
 
@@ -207,6 +213,18 @@ app.whenReady().then(() => {
         },
       ]
     })
+  })
+
+  // 保存文件
+  ipcMain.handle('saveFile', async (_event, file) => {
+    const result = await dialog.showSaveDialog({
+      // 对话框窗口的标题
+      title: '保存文件',
+    })
+
+    if (result.filePath) {
+      writeFileSync(result.filePath, file[0]);
+    }
   })
 })
 

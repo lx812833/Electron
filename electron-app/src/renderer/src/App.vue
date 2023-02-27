@@ -36,6 +36,8 @@ const handleSelectFile = async () => {
   // @ts-ignore
   const result = await window.api.selectFile();
   console.log("文件选择", result);
+  // @ts-ignore
+  await window.api.saveFile(result.filePaths);
 }
 
 // 向预加载脚本传递回调方法，用于处理主进程的消息

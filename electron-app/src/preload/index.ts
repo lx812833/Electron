@@ -15,6 +15,8 @@ const api = {
   showContextMenu: () => ipcRenderer.send('showContextMenu'),
   // 选择文件
   selectFile: () => { return ipcRenderer.invoke('selectFile') },
+  // 保存文件
+  saveFile: (val: any) => { return ipcRenderer.invoke('saveFile', val) },
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
