@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset';
 import { writeFileSync } from 'fs';
 
 // 是否是苹果系统
+// win32 (Windows), linux (Linux) 和 darwin (macOS) 
 const isMac = process.platform === 'darwin';
 
 const createWindow = () => {
@@ -134,9 +135,9 @@ const messageBox = async () => {
   }
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// 只有在 app 模块的 ready 事件被激发后才能创建浏览器窗口
+// 使用 app.whenReady() API来监听此事件
+
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
@@ -151,9 +152,11 @@ app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    // macOS 应用通常即使在没有打开任何窗口的情况下也继续运行，并且在没有窗口可用的情况下激活应用时会打开新的窗口。
+    // 如果没有窗口打开则打开一个窗口
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
   })
 
   // 主进程事件监听
@@ -203,7 +206,7 @@ app.whenReady().then(() => {
     return dialog.showOpenDialog({
       message: '选择文件',
       // 默认路径，默认选择的文件
-      defaultPath: '微信图片_20221103132225.jpg',
+      // defaultPath: '微信图片_20221103132225.jpg',
       // properties: ['openFile', 'openDirectory', 'multiSelections',],
       // 文件类型限制
       filters: [
@@ -228,14 +231,10 @@ app.whenReady().then(() => {
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// 关闭所有窗口时退出应用 (Windows & Linux)
+// Cmd + Q（快捷键退出）
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 })
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
