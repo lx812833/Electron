@@ -8,6 +8,7 @@
     <a href="https://www.bilibili.com/" target="__blank">哔哩哔哩</a>
     <button @click="handleSendApi">切换</button>
     <button @click="handleSelectFile">选择文件</button>
+    <button @click="handleToggleMode">{{ mode }}</button>
   </div>
 </template>
 
@@ -16,6 +17,14 @@ import { ref } from "vue";
 import Versions from "./components/Versions.vue";
 
 const text = ref("Electron + Vue3 + Vite");
+const mode = ref('dark');
+
+// 切换light/dark模式
+const handleToggleMode = async () => {
+  // @ts-ignore
+  const type = await window.api.modeToggle();
+  mode.value = type ? 'light' : 'dark';
+}
 
 const handleRightClick = () => {
   // @ts-ignore

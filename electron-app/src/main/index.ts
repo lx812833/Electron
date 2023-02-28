@@ -1,4 +1,4 @@
-import { app, shell, ipcMain, Notification, Menu, BrowserWindow, screen, dialog } from 'electron';
+import { app, shell, ipcMain, Notification, Menu, BrowserWindow, screen, dialog, nativeTheme } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
@@ -229,6 +229,17 @@ app.whenReady().then(() => {
       writeFileSync(result.filePath, file[0]);
     }
   })
+})
+
+// 设置light/dark模式
+// nativeTheme 对象执行 深色模式 变更
+ipcMain.handle('modeToggle', async () => {
+  if (nativeTheme.shouldUseDarkColors) {
+    nativeTheme.themeSource = 'light';
+  } else {
+    nativeTheme.themeSource = 'dark';
+  }
+  return nativeTheme.shouldUseDarkColors;
 })
 
 // 关闭所有窗口时退出应用 (Windows & Linux)

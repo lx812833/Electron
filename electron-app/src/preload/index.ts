@@ -14,9 +14,12 @@ const api = {
   // 自定义右键菜单
   showContextMenu: () => ipcRenderer.send('showContextMenu'),
   // 选择文件
-  selectFile: () => { return ipcRenderer.invoke('selectFile') },
+  selectFile: () => ipcRenderer.invoke('selectFile'),
   // 保存文件
-  saveFile: (val: any) => { return ipcRenderer.invoke('saveFile', val) },
+  saveFile: (val: any) => ipcRenderer.invoke('saveFile', val),
+  // 设置light/dark模式
+  modeToggle: () => ipcRenderer.invoke('modeToggle'),
+  modeSystem: () => ipcRenderer.invoke('modeSystem'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
