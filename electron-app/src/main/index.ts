@@ -3,6 +3,7 @@ import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { writeFileSync } from 'fs';
+import autoUpdater from './autoUpdater';
 
 // 是否是苹果系统
 // win32 (Windows), linux (Linux) 和 darwin (macOS) 
@@ -16,7 +17,11 @@ const createWindow = () => {
     width: 700,
     height: 450,
     show: false,
-    // autoHideMenuBar: true,
+    frame: false, // 创建一个无边框窗口
+    transparent: false, // 使窗口 透明, 仅在无边框窗口下起作用
+    skipTaskbar: true, // 是否在任务栏中显示窗口（false）
+    alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
+    // autoHideMenuBar: true, // 自动隐藏菜单栏（false）
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       sandbox: false, // 关闭沙盒模式，为false 时 preload.js 可以使用nodejs、electron的高级api，如fs模块
@@ -41,6 +46,11 @@ const createWindow = () => {
       preload: join(__dirname, '../preload/index.js'),
     }
   })
+
+  // 调试
+  if (is.dev) {
+    mainWindow.webContents.openDevTools()
+  }
 
   // 如果应用过于复杂，在加载本地资源时出现白屏，这时可以监测窗口的 ready-to-show 事件
   mainWindow.on('ready-to-show', () => {
@@ -80,9 +90,11 @@ const createWindow = () => {
   tray.setToolTip('This is my application');
   tray.setTitle('This is my title');
 
-  // mainWindow.webContents.openDevTools();
   // 将窗口移动到屏幕中心
   // mainWindow.center();
+
+  // 更新下载
+  autoUpdater(mainWindow);
 }
 
 // 创建菜单
