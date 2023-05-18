@@ -1,10 +1,11 @@
-import { app, shell, ipcMain, Notification, Tray, nativeImage, Menu, BrowserWindow, screen, dialog, nativeTheme } from 'electron';
+import { app, shell, ipcMain, Notification, Menu, BrowserWindow, screen, dialog, nativeTheme } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { writeFileSync } from 'fs';
 import autoUpdater from './autoUpdater';
 import appMenu from './appMenu';
+import createTray from './tray';
 
 const createWindow = () => {
   // Create the browser window.
@@ -44,6 +45,9 @@ const createWindow = () => {
     }
   })
 
+  // 将窗口移动到屏幕中心
+  mainWindow.center();
+
   // 调试
   if (is.dev) {
     mainWindow.webContents.openDevTools()
@@ -60,7 +64,10 @@ const createWindow = () => {
   // 菜单
   appMenu(mainWindow);
 
-  // 使用 shell 模块，用操作系统的默认浏览器打开网页链接
+  // 托盘
+  createTray();
+
+  // 使用 shell 模块，从渲染进程打开窗口，用操作系统的默认浏览器打开网页链接
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     // action: deny 拒绝electron新建窗口打开
@@ -75,24 +82,6 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
-
-  // 托盘
-  const trayIcon = nativeImage.createFromPath('../../resources/favicon.ico');
-  const tray = new Tray(trayIcon);
-
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
-  ])
-
-  tray.setContextMenu(contextMenu);
-  tray.setToolTip('This is my application');
-  tray.setTitle('This is my title');
-
-  // 将窗口移动到屏幕中心
-  // mainWindow.center();
 }
 
 // 自定义右键消息框菜单
