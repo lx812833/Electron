@@ -9,7 +9,7 @@ import { BrowserWindow, dialog, shell } from 'electron';
 autoUpdater.autoDownload = false; // 自动下载更新
 autoUpdater.autoInstallOnAppQuit = false; // 退出时自动安装更新
 
-export default (win: BrowserWindow) => {
+export default (mainWindow: BrowserWindow) => {
   // 检查是否有更新
   if (!is.dev) {
     autoUpdater.checkForUpdates();
@@ -61,6 +61,6 @@ export default (win: BrowserWindow) => {
 
   // 监听下载进度
   autoUpdater.on('download-progress', (progress) => {
-    win.webContents.send('downloadProgress', progress);
+    mainWindow.webContents.send('downloadProgress', progress);
   })
 }

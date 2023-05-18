@@ -4,20 +4,17 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { writeFileSync } from 'fs';
 import autoUpdater from './autoUpdater';
-
-// 是否是苹果系统
-// win32 (Windows), linux (Linux) 和 darwin (macOS) 
-const isMac = process.platform === 'darwin';
+import appMenu from './appMenu';
 
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     x: screen.getPrimaryDisplay().workAreaSize.width - 900,
-    y: 0,
+    y: 100,
     width: 700,
     height: 450,
     show: false,
-    frame: false, // 创建一个无边框窗口
+    frame: true, // 创建一个无边框窗口
     transparent: false, // 使窗口 透明, 仅在无边框窗口下起作用
     skipTaskbar: true, // 是否在任务栏中显示窗口（false）
     alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
@@ -57,6 +54,12 @@ const createWindow = () => {
     mainWindow.show();
   })
 
+  // 更新下载
+  autoUpdater(mainWindow);
+
+  // 菜单
+  appMenu(mainWindow);
+
   // 使用 shell 模块，用操作系统的默认浏览器打开网页链接
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
@@ -72,8 +75,6 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
-
-  applicationMenu(mainWindow);
 
   // 托盘
   const trayIcon = nativeImage.createFromPath('../../resources/favicon.ico');
@@ -92,53 +93,6 @@ const createWindow = () => {
 
   // 将窗口移动到屏幕中心
   // mainWindow.center();
-
-  // 更新下载
-  autoUpdater(mainWindow);
-}
-
-// 创建菜单
-const applicationMenu = (mainWindow: BrowserWindow) => {
-  const menu = Menu.buildFromTemplate([
-    {
-      label: 'bilibili',
-      submenu: [
-        {
-          label: '打开新窗口',
-          click: () => {
-            const win = new BrowserWindow({
-              width: 300,
-              height: 300,
-            })
-            win.loadURL('https://www.bilibili.com/')
-          },
-        },
-        {
-          type: 'separator', // 分割线
-        },
-        {
-          label: '增加', // 渲染进程触发主进程通信
-          click: () => mainWindow.webContents.send('increment', 1),
-        },
-        {
-          label: '退出',
-          click: async () => app.quit(),
-          accelerator: 'CommandOrControl+q',  // 定义快捷键
-        },
-        isMac ? { label: '关闭', role: 'close' } : { role: 'quit' },
-      ],
-    },
-    {
-      label: '在线网站',
-      submenu: [
-        {
-          label: '哔哩哔哩',
-        },
-      ],
-    },
-  ])
-
-  Menu.setApplicationMenu(menu);
 }
 
 // 自定义右键消息框菜单
