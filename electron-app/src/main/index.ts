@@ -6,6 +6,7 @@ import { writeFileSync } from 'fs';
 import autoUpdater from './autoUpdater';
 import appMenu from './appMenu';
 import createTray from './tray';
+import './contextMenu';
 
 const createWindow = () => {
   // Create the browser window.
@@ -18,7 +19,7 @@ const createWindow = () => {
     frame: true, // 创建一个无边框窗口
     transparent: false, // 使窗口 透明, 仅在无边框窗口下起作用
     skipTaskbar: true, // 是否在任务栏中显示窗口（false）
-    alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
+    alwaysOnTop: false, // 窗口是否永远在别的窗口的上面
     // autoHideMenuBar: true, // 自动隐藏菜单栏（false）
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -84,29 +85,8 @@ const createWindow = () => {
   }
 }
 
-// 自定义右键消息框菜单
-const messageBox = async () => {
-  const result = await dialog.showMessageBox({
-    type: 'warning',
-    message: '你要退出吗？',
-    detail: '有问题可以访问后盾人网站',
-    buttons: ['取消', '退出'],
-    // 取消按钮的索引，使用esc根据索引调用取消按钮，默认为0，所以建议在buttons中将取消设置为第一个
-    cancelId: 0,
-    checkboxLabel: '接收协议',
-    checkboxChecked: false,
-  })
-  if (!result.checkboxChecked) {
-    return dialog.showErrorBox('通知', '你没有接收协议');
-  }
-  if (result.response === 1) {
-    app.quit();
-  }
-}
-
 // 只有在 app 模块的 ready 事件被激发后才能创建浏览器窗口
 // 使用 app.whenReady() API来监听此事件
-
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
@@ -140,19 +120,6 @@ app.whenReady().then(() => {
 
   ipcMain.on('finish', (_event, value) => {
     dialog.showErrorBox("通知", value);
-  })
-
-  // 自定义右键菜单
-  ipcMain.on('showContextMenu', (event) => {
-    const popupMenuTemplate = [
-      { label: '退出', click: () => app.quit() },
-      { type: 'separator' },
-      { label: '消息框', click: () => messageBox() }
-    ]
-    // @ts-ignore (define in dts)
-    const popupMenu = Menu.buildFromTemplate(popupMenuTemplate);
-    // @ts-ignore (define in dts)
-    popupMenu.popup(BrowserWindow.fromWebContents(event.sender));
   })
 
   // 为一个 invokeable的IPC 添加一个handler。 
