@@ -107,6 +107,11 @@ app.whenReady().then(() => {
       createWindow();
     }
   })
+
+  // 隐藏苹果dock图标
+  if (process.platform == 'darwin') {
+    app.dock.hide();
+  }
 })
 
 // 关闭所有窗口时退出应用 (Windows & Linux)
