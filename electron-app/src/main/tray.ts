@@ -3,9 +3,9 @@
  */
 
 import path from 'path';
-import { Menu, shell, Tray } from 'electron';
+import { BrowserWindow, Menu, shell, Tray } from 'electron';
 
-export default () => {
+export default (mainWindow: BrowserWindow) => {
   const tray = new Tray(
     path.resolve(__dirname, process.platform == 'darwin' ? '../../resources/trayTemplate@2x.png' : '../../resources/windowTray.png')
   );
@@ -16,6 +16,9 @@ export default () => {
     { label: '问题反馈', click: () => shell.openExternal('https://www.bilibili.com/') }
   ]);
 
+  tray.on('click', () => {
+    mainWindow.show();
+  })
   tray.setToolTip('application');
   tray.setContextMenu(contextMenu);
 }

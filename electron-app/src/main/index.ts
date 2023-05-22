@@ -66,7 +66,7 @@ const createWindow = () => {
   appMenu(mainWindow);
 
   // 托盘
-  createTray();
+  createTray(mainWindow);
 
   // 使用 shell 模块，从渲染进程打开窗口，用操作系统的默认浏览器打开网页链接
   mainWindow.webContents.setWindowOpenHandler((details) => {
