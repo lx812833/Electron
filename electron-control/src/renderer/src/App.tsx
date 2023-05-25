@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 
+interface IControlState {
+  name: string,
+  type: number,
+}
+
 function App(): JSX.Element {
   const [remoteCode, setRemoteCode] = useState('');
   const [localCode, setLocalCode] = useState('');
@@ -16,7 +21,8 @@ function App(): JSX.Element {
     window.api.startControl(remoteCode);
   }
 
-  const handleControlState = (e: any, name: String, type: Number) => {
+  const handleControlState = ({ name, type }: IControlState) => {
+    console.log("*", name, type);
     let text = '';
     if (type === 1) {
       text = `正在远程控制${name}`;
@@ -29,13 +35,14 @@ function App(): JSX.Element {
   useEffect(() => {
     handleLogin();
     // @ts-ignore
-    window.api.controlStateChange((e: any) => {
-      handleControlState(e, '张三', 1);
+    window.api.controlStateChange((event: () => void, info: ControlState) => {
+      handleControlState(info)
     });
+
     return () => {
       // @ts-ignore
       window.api.controlStateRemove((e: any) => {
-        handleControlState(e, '张三', 1);
+        handleControlState({ name: '张三', type: 1 });
       });
     }
   }, [])

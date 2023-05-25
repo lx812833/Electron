@@ -4,7 +4,7 @@ import { electronAPI } from '@electron-toolkit/preload';
 // Custom APIs for renderer
 const api = {
   login: () => ipcRenderer.invoke('login'),
-  startControl: () => ipcRenderer.send('start-control'),
+  startControl: (res: String) => ipcRenderer.send('start-control', res),
   controlStateChange: (callback: () => void) => ipcRenderer.on('control-state-change', callback),
   controlStateRemove: (callback: () => void) => ipcRenderer.removeListener('control-state-change', callback),
 }

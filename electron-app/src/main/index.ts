@@ -42,7 +42,7 @@ const createWindow = () => {
        *  来开启node支持，这时就可以在preload.js或renderer.js中使用fs 等高级模块
       */
       nodeIntegration: false,
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.js'), // 指定preload脚本路径
     }
   })
 
