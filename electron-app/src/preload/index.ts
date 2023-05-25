@@ -1,6 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 
+/**
+ * 在渲染进程中，使用 contextBridge.exposeInMainWorld 将 ipcRenderer 对象暴露给全局作用域时，
+ * 为了避免将所有 Electron 的 API 都暴露给渲染进程，我们需要通过 window 对象来访问暴露出来的 API，而不是直接访问全局对象，这可以提高安全性。
+ * 
+ * 例如，如果我们在渲染进程中直接访问全局对象，就可以使用 require('electron') 来直接获取到 ipcRenderer 对象，
+ * 然后就可以通过这个对象发送任意消息给主进程，这可能会导致安全问题。
+ * 但是，如果我们使用 contextBridge 将 ipcRenderer 对象暴露给全局作用域，并通过 window 对象来访问，
+ * 那么在渲染进程中就只能访问到暴露出来的 API，而无法直接访问 Electron 的其他 API，这可以提高安全性，防止恶意代码的执行。
+ */
+
 // 为渲染进程暴露API Custom APIs for renderer
 // 该API用于向主进程传递事件
 const api = {
