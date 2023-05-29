@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { ipcMain, BrowserWindow } from 'electron';
 
 export default (mainWindow: BrowserWindow) => {
@@ -6,10 +7,16 @@ export default (mainWindow: BrowserWindow) => {
     return code;
   })
 
-  ipcMain.on('start-control', (_, res) => {
+  ipcMain.on('start-control', (_, remoteCode) => {
     mainWindow.webContents.send('control-state-change', {
-      name: res,
+      name: remoteCode,
       type: 1
     });
+
+    const childWin = new BrowserWindow({
+      width: 1000,
+      height: 680,
+    });
+    childWin.loadFile(join(__dirname, '../renderer/src/control/index.html'));
   })
 }
