@@ -17,6 +17,6 @@ export default (mainWindow: BrowserWindow) => {
       width: 1000,
       height: 680,
     });
-    childWin.loadFile(join(__dirname, '../renderer/src/control/index.html'));
+    childWin.loadFile(join(__dirname, '../renderer/control/index.html'));
   })
 }
