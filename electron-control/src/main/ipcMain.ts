@@ -12,11 +12,15 @@ export default (mainWindow: BrowserWindow) => {
       name: remoteCode,
       type: 1
     });
-
+    // 新开一窗口页面
     const childWin = new BrowserWindow({
       width: 1000,
       height: 680,
     });
     childWin.loadFile(join(__dirname, '../renderer/control/index.html'));
+  })
+
+  ipcMain.on('control-call-back', (_, res) => {
+    console.log("control回调", res);
   })
 }

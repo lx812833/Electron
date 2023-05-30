@@ -7,6 +7,7 @@ const api = {
   startControl: (res: String) => ipcRenderer.send('start-control', res),
   controlStateChange: (callback: () => void) => ipcRenderer.on('control-state-change', callback),
   controlStateRemove: (callback: () => void) => ipcRenderer.removeListener('control-state-change', callback),
+  controlCallBack: (res: String) => ipcRenderer.send('control-call-back', res),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
