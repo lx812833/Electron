@@ -1,0 +1,45 @@
+{
+  "name": "electron-traffic",
+  "version": "1.0.0",
+  "author": "傲雄科技",
+  "description": "electron 傲雄DEMO管理系统",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^23.1.4",
+    "electron-builder": "^23.6.0"
+  },
+  "dependencies": {},
+  "build": {
+    "productName": "傲雄DEMO管理系统",
+    "appId": "com.eseal.isigning",
+    "copyright": "ax",
+    "directories": {
+      "output": "electron_dist"
+    },
+    "win": {
+      "icon": "icons/logo.ico",
+      "target": [{
+        "target": "nsis"
+      }]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icons/logo.ico",
+      "uninstallerIcon": "icons/logo.ico",
+      "installerHeaderIcon": "icons/logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "傲雄DEMO管理系统"
+    },
+    "mac": {
+      "icon": "icons/logo.ico"
+    }
+  }
+}
