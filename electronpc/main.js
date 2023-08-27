@@ -1,6 +1,7 @@
 const { app, shell, screen, ipcMain, BrowserWindow } = require("electron");
 const path = require("path");
 const { createTray } = require("./tray"); // 托盘
+const { windowMove } = require("./windowMove"); // 拖动
 
 let mainWindow;
 const createWindow = () => {
@@ -40,12 +41,16 @@ const createWindow = () => {
   // mainWindow.maximize();
 
   // 打开开发工具
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
+
   // 将窗口移动到屏幕中心
   mainWindow.center();
 
   // 托盘
   createTray(mainWindow);
+
+  // 拖动
+  windowMove(mainWindow);
 
   process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 }
